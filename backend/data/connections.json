@@ -1,0 +1,16 @@
+{
+    "connections": {
+        "36d0c2b17bda5bc75a934818dffef168": {
+            "id": "36d0c2b17bda5bc75a934818dffef168",
+            "name": "testing",
+            "server_ip": "localhost",
+            "port": 3306,
+            "username": "root",
+            "password": "MTIzMTIzRmF0aWg=",
+            "database": null,
+            "created_at": "2025-06-08 19:16:13",
+            "last_used": "2025-06-08 19:17:37"
+        }
+    },
+    "active_connection": "36d0c2b17bda5bc75a934818dffef168"
+}
