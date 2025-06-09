@@ -20,10 +20,7 @@ $router->map('POST', '/list_databases', function () {
 });
 $router->map('POST', '/list_tables', function () {
   header('Content-Type: application/json; charset=utf-8');
-
-  $requestBody = file_get_contents('php://input');
-  $data = json_decode($requestBody, true);
-
+  $data = getDataFromRequest();
   $db = new Database();
   $conn = $db->pdo;
 
@@ -70,10 +67,7 @@ $router->map('POST', '/list_tables', function () {
 
 $router->map('POST', '/list_columns', function () {
   header('Content-Type: application/json; charset=utf-8');
-
-  $requestBody = file_get_contents('php://input');
-  $data = json_decode($requestBody, true);
-
+  $data = getDataFromRequest();
   $db = new Database();
   $conn = $db->pdo;
 
@@ -126,8 +120,7 @@ $router->map('POST', '/list_columns', function () {
   }
 });
 $router->map('POST', '/select_database', function () {
-  $requestBody = file_get_contents('php://input');
-  $data = json_decode($requestBody, true);
+  $data = getDataFromRequest();
   if (!isset($data['database']) || empty($data['database'])) {
     response('error', 'database must be provided', null, 400);
   }
@@ -141,4 +134,35 @@ $router->map('POST', '/select_database', function () {
     response('error', 'database dose not exists', null, 404);
   }
 });
+$router->map('POST', '/run_query', function () {
+  $data = getDataFromRequest();
+  $db = new Database();
+  $query = trim($data['query'] ?? '');
+
+  // Check if query is empty
+  if (!$query) {
+    response('error', 'No query provided', null, 400);
+  }
+
+  try {
+
+    // i feel cheap doing it like this but till i find another way to do it ill do it like this
+    // ok i have to find another way to do it for now run query its working but i have to fix select database
+    // to make a query work i have to specify the database using '.' ex: select * from database.table
+    $stmt = $db->pdo->query($query);
+    $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    var_dump($stmt);
+    response('success', 'Query executed', [
+      'columns' => array_keys($rows[0] ?? []),
+      'rows' => $rows
+    ]);
+  } catch (PDOException $e) {
+    response('error', 'SQL error: ' . $e->getMessage(), null, 500);
+  }
+});
 // $router->map()
+function getDataFromRequest()
+{
+  $requestBody = file_get_contents('php://input');
+  return json_decode($requestBody, true);
+}

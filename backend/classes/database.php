@@ -2,7 +2,8 @@
 
 require_once __DIR__ . '/../configs/config.php';
 require_once __DIR__ . '/../functions/passwordManagement.php';
-
+// start session securely (don't know if we need it but for now i'm leaving this comment)
+session_start();
 class Database
 {
   private string $server_ip;
@@ -77,6 +78,8 @@ class Database
     $this->username = $connectionData->username ?? throw new Exception("Missing username");
     $this->encryptedPassword = $connectionData->password ?? "";
 
+
+
     $this->establishConnection();
   }
 
@@ -88,7 +91,12 @@ class Database
   {
     try {
       $password = decrypt_password($this->encryptedPassword);
-      $dsn = "mysql:host={$this->server_ip};port={$this->port};charset=utf8mb4";
+      if (!isset($_SESSION['current_database']) || empty($_SESSION['current_database'])) {
+        $dsn = "mysql:host={$this->server_ip};port={$this->port};dbname={$_SESSION['database']};charset=utf8mb4";
+      } else {
+        $dsn = "mysql:host={$this->server_ip};port={$this->port};charset=utf8mb4";
+      }
+      // Include selected database in DSN
 
       $this->pdo = new PDO($dsn, $this->username, $password, [
         PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
@@ -123,6 +131,7 @@ class Database
 
       if ($result !== false) {
         $this->currentDatabase = $dbName;
+        $_SESSION['current_database'] = $this->currentDatabase;
         return [
           'success' => true,
           'message' => 'Database selected successfully',
@@ -142,7 +151,7 @@ class Database
    */
   public function getCurrentDatabase(): ?string
   {
-    return $this->currentDatabase;
+    return $_SESSION['current_database'];
   }
   public function checkDatabase(string $dbname): bool
   {
