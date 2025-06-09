@@ -322,9 +322,3 @@ function updateConnectionLastUsed($connectionId)
     file_put_contents(CONFIG_FILE, json_encode($data, JSON_PRETTY_PRINT));
   }
 }
-
-
-
-
-
-?>
