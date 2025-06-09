@@ -75,7 +75,7 @@ class Database
     $this->server_ip = $connectionData->server_ip ?? throw new Exception("Missing server_ip");
     $this->port = (int) ($connectionData->port ?? 3306);
     $this->username = $connectionData->username ?? throw new Exception("Missing username");
-    $this->encryptedPassword = $connectionData->password ?? throw new Exception("Missing password");
+    $this->encryptedPassword = $connectionData->password ?? "";
 
     $this->establishConnection();
   }
@@ -144,7 +144,19 @@ class Database
   {
     return $this->currentDatabase;
   }
+  public function checkDatabase(string $dbname): bool
+  {
+    $stmt = $this->pdo->prepare(' SELECT
+  IF(EXISTS (
+    SELECT SCHEMA_NAME
+    FROM INFORMATION_SCHEMA.SCHEMATA
+    WHERE SCHEMA_NAME = "' . $dbname . '"
+  ), "true", "false") AS db_exists');
+    $stmt->execute();
+    $response = $stmt->fetch();
 
+    return $response['db_exists'] === 'true' ? true : false;
+  }
   /**
    * Test if connection is alive
    */

@@ -1,4 +1,10 @@
 <?php
+/*
+thing to do
+add a way to create table update table and delete table
+add a way to create columns update columns and delete columns + create list columns with information
+
+*/
 require_once __DIR__ . '/../functions/response.php';
 $router->map('POST', '/list_databases', function () {
   try {
@@ -62,8 +68,6 @@ $router->map('POST', '/list_tables', function () {
   }
 });
 
-
-
 $router->map('POST', '/list_columns', function () {
   header('Content-Type: application/json; charset=utf-8');
 
@@ -104,7 +108,7 @@ $router->map('POST', '/list_columns', function () {
 
     } else {
       $table = preg_replace('/[^a-zA-Z0-9_\-]/', '', $data['table']);
-      $db->setDatabase($table);
+      $db->setDatabase($data['database']);
 
       $stmt = $conn->prepare('SHOW TABLES');
       $stmt->execute();
@@ -119,6 +123,22 @@ $router->map('POST', '/list_columns', function () {
 
   } catch (Exception $e) {
     echo response('error', $e->getMessage(), null, 500);
+  }
+});
+$router->map('POST', '/select_database', function () {
+  $requestBody = file_get_contents('php://input');
+  $data = json_decode($requestBody, true);
+  if (!isset($data['database']) || empty($data['database'])) {
+    response('error', 'database must be provided', null, 400);
+  }
+  $db = new Database();
+  if ($db->checkDatabase($data['database'])) {
+    $db->setDatabase($data['database']);
+    response('success', 'database has been selected successfully', array(
+      'database_name' => $db->getCurrentDatabase()
+    ));
+  } else {
+    response('error', 'database dose not exists', null, 404);
   }
 });
 // $router->map()
