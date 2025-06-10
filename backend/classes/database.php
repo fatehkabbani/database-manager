@@ -12,6 +12,7 @@ class Database
   private string $encryptedPassword;
   private ?string $currentDatabase = null;
   public ?PDO $pdo = null;
+  private ?string $connectionId;
 
   /**
    * @throws Exception
@@ -25,7 +26,41 @@ class Database
       throw new Exception("Database initialization failed: " . $e->getMessage());
     }
   }
+  private function updateDatabaseInConfig(string $connectionId, string $newDatabase): void
+  {
+    if (!file_exists(CONFIG_FILE)) {
+      throw new Exception("Configuration file not found");
+    }
 
+    $content = file_get_contents(CONFIG_FILE);
+    if ($content === false) {
+      throw new Exception("Unable to read configuration file");
+    }
+
+    $data = json_decode($content, true); // Use associative array
+    if (json_last_error() !== JSON_ERROR_NONE) {
+      throw new Exception("Invalid JSON in configuration file: " . json_last_error_msg());
+    }
+
+    $found = false;
+    foreach ($data['connections'] as &$connection) {
+      if ($connection['id'] === $connectionId) {
+        $connection['database'] = $newDatabase;
+        $found = true;
+        break;
+      }
+    }
+
+    if (!$found) {
+      throw new Exception("Connection with ID '{$connectionId}' not found");
+    }
+
+    // Re-encode and write back to file
+    $newJson = json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
+    if (file_put_contents(CONFIG_FILE, $newJson) === false) {
+      throw new Exception("Failed to write updated configuration to file");
+    }
+  }
   /**
    * Load connection data from config file
    * @throws Exception
@@ -56,7 +91,7 @@ class Database
     if (!$targetConnectionId) {
       throw new Exception("No active connection specified");
     }
-
+    $this->connectionId = $targetConnectionId;
     // Find the connection
     foreach ($data->connections as $connection) {
       if ($connection->id === $targetConnectionId) {
@@ -77,10 +112,20 @@ class Database
     $this->port = (int) ($connectionData->port ?? 3306);
     $this->username = $connectionData->username ?? throw new Exception("Missing username");
     $this->encryptedPassword = $connectionData->password ?? "";
-
-
-
     $this->establishConnection();
+  }
+  /**
+   * get specified information
+   * @param array keys
+   * @return ?array value []
+   */
+  public function getSpecifiedInfo(array $keys = [])
+  {
+    $data = getConnectionById($this->connectionId);
+    if (empty($keys))
+      return [];
+
+    return array_intersect_key($data, array_flip($keys));
   }
 
   /**
@@ -91,12 +136,7 @@ class Database
   {
     try {
       $password = decrypt_password($this->encryptedPassword);
-      if (!isset($_SESSION['current_database']) || empty($_SESSION['current_database'])) {
-        $dsn = "mysql:host={$this->server_ip};port={$this->port};dbname={$_SESSION['database']};charset=utf8mb4";
-      } else {
-        $dsn = "mysql:host={$this->server_ip};port={$this->port};charset=utf8mb4";
-      }
-      // Include selected database in DSN
+      $dsn = "mysql:host={$this->server_ip};port={$this->port};charset=utf8mb4";
 
       $this->pdo = new PDO($dsn, $this->username, $password, [
         PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
@@ -131,7 +171,8 @@ class Database
 
       if ($result !== false) {
         $this->currentDatabase = $dbName;
-        $_SESSION['current_database'] = $this->currentDatabase;
+        $this->updateDatabaseInConfig($this->connectionId, $dbName);
+        $this->getConnectionInfo();
         return [
           'success' => true,
           'message' => 'Database selected successfully',
@@ -145,13 +186,18 @@ class Database
       throw new Exception("Failed to select database '{$dbName}': " . $e->getMessage());
     }
   }
-
+  public function getConnectionId()
+  {
+    return $this->connectionId;
+  }
   /**
    * Get current database name
    */
   public function getCurrentDatabase(): ?string
   {
-    return $_SESSION['current_database'];
+    // return $_SESSION['current_database'];
+    $database = $this->getSpecifiedInfo(['database'])['database'];
+    return $database;
   }
   public function checkDatabase(string $dbname): bool
   {
@@ -177,7 +223,6 @@ class Database
       return false;
     }
   }
-
   /**
    * Get connection info
    */

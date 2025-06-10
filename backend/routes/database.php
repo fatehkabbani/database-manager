@@ -149,9 +149,13 @@ $router->map('POST', '/run_query', function () {
     // i feel cheap doing it like this but till i find another way to do it ill do it like this
     // ok i have to find another way to do it for now run query its working but i have to fix select database
     // to make a query work i have to specify the database using '.' ex: select * from database.table
+    $database = $db->getCurrentDatabase();
+    if (!empty($database)) {
+      $sql = 'USE ' . $database;
+      $stmt = $db->pdo->query($sql);
+    }
     $stmt = $db->pdo->query($query);
     $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    var_dump($stmt);
     response('success', 'Query executed', [
       'columns' => array_keys($rows[0] ?? []),
       'rows' => $rows
