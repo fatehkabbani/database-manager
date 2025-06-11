@@ -212,6 +212,26 @@ class Database
 
     return $response['db_exists'] === 'true' ? true : false;
   }
+  /*
+    check if table exist
+  */
+  public function checkTable(string $tableName): bool
+  {
+    try {
+      $stmt = $this->pdo->prepare(' SELECT
+        IF(1 <= (
+          SELECT count(*) FROM information_schema.TABLES
+          WHERE TABLE_NAME = "' . $tableName . '" AND TABLE_SCHEMA = "' . $this->getCurrentDatabase() . '"
+        ), "true", "false") AS table_exists');
+      $stmt->execute();
+      $response = $stmt->fetch();
+      return $response['table_exists'] === "true" ? true : false;
+    } catch (PDOException $e) {
+      // TODO take the logger and implement it here
+      // var_dump($e);
+      return false;
+    }
+  }
   /**
    * Test if connection is alive
    */

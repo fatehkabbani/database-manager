@@ -16,6 +16,7 @@ $router->setBasePath('');
 
 include_once __DIR__ . '/routes/connection.php';
 include_once __DIR__ . '/routes/database.php';
+include_once __DIR__ . '/routes/table.php';
 include_once __DIR__ . '/routes/test.php';
 
 $match = $router->match();
