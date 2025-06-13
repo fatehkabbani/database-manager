@@ -8,4 +8,4 @@ function VoltIcon() {
     </div>
   )
 }
-export default VoltIcon
+export  { VoltIcon }

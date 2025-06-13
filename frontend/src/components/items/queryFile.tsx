@@ -1,6 +1,6 @@
 import React from 'react'
-import { IconX } from '@tabler/icons-react';
 import { useState } from 'react';
+import { X } from "lucide-react";
 interface QueryFileProps {
   queryNumber: number;
   isActive?: boolean;
@@ -32,9 +32,9 @@ function QueryFile({ queryNumber, isActive = false, onClose, onClick }: QueryFil
           isHovered ? 'opacity-100' : 'opacity-0'
         }`}
       >
-        <IconX size={16} />
+        <X size={16} />
       </span>
     </div>
   );
 }
-export default QueryFile;
+export  {QueryFile};

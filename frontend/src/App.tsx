@@ -1,12 +1,10 @@
-import { useState } from 'react'
 import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels';
-import SideBar from './components/sideBar';
-import Navbar from './components/navbar';
+import {SideBar} from './components/sideBar';
+import { Navbar } from './components/navbar';
 function App() {
-  const [query, setQuery] = useState('');
   return (
     <>
-      <div className="h-screen bg-gray-900 text-white flex flex-col ">
+       <div className="h-screen bg-gray-900 text-white flex flex-col ">
         <Navbar />
         <PanelGroup direction="horizontal" className="flex-1">
           {/* Sidebar Panel */}
@@ -54,8 +52,6 @@ function App() {
                   <div className="flex">
                     <span className="text-gray-500 mr-4 font-mono text-sm mt-1">1</span>
                     <textarea
-                      value={query}
-                      onChange={(e) => setQuery(e.target.value)}
                       placeholder="sql here but changing it later for the vscode one..."
                       className="flex-1 bg-transparent text-white resize-none outline-none font-mono"
                       rows={3}

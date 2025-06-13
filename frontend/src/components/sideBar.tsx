@@ -1,9 +1,10 @@
 import React from 'react'
 import { Panel, PanelGroup ,  PanelResizeHandle} from 'react-resizable-panels'
-import { IconFolder , IconClock,IconPlus} from '@tabler/icons-react';
+// import { IconFolder , IconClock , IconPlus } from '@tabler/icons-react';
+import { Plus , Folder,Clock } from "lucide-react"
 
-import ActionBar from '@/components/ActionBar'
-import QueryFile  from '@/components/items/queryFile'
+import {ActionBar} from '@/components/ActionBar'
+import {QueryFile}  from '@/components/items/queryFile'
 function setActiveQuery(QueryNumber : number ) {
   // Logic to set the active query
   console.log(`Setting query ${QueryNumber} as active`);
@@ -23,7 +24,7 @@ function SideBar() {
           <div className="p-4 flex-1">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-lg font-semibold items-center">Queries</h2>
-              <IconPlus size="16" className='cursor-pointer'/>
+              <Plus size="16" className='cursor-pointer'/>
             </div>
 
 
@@ -36,12 +37,12 @@ function SideBar() {
           <div className="p-4 border-t">
             <div className="space-y-1">
               <div className="text-sm text-gray-400 hover:text-white cursor-pointer p-2 rounded flex items-center select-none">
-                <span className="mr-2"><IconFolder /></span>
+                <span className="mr-2"> <Folder /> </span>
                 Saved queries
                 <span className="ml-auto"></span>
               </div>
               <div className="text-sm text-gray-400 hover:text-white cursor-pointer p-2 rounded flex items-center select-none">
-                <span className="mr-2"><IconClock /></span>
+                <span className="mr-2"> <Clock /> </span>
                 Query history
                 <span className="ml-auto"></span>
               </div>
@@ -52,4 +53,4 @@ function SideBar() {
     </PanelGroup>
   )
 }
-export default SideBar
+export { SideBar }

@@ -6,4 +6,4 @@ function FileIcon() {
   )
 }
 
-export default FileIcon
+export { FileIcon }

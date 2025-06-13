@@ -1,6 +1,6 @@
 import React from 'react'
 import image from '@/components/icons/logo.svg'  // Ensure you have the correct path to your CSS file
-export default function Logo() {
+  function Logo() {
   return (
     <img src={image}
       alt="Logo"
@@ -9,3 +9,4 @@ export default function Logo() {
     />
   )
 }
+export {Logo}
