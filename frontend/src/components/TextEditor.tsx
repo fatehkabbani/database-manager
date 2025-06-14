@@ -12,7 +12,7 @@ export function TextEditor() {
     <div className="mb-2 h-full rounded-lg overflow-hidden border border-border/50 bg-card/50 backdrop-blur-sm">
       <div className="mt-1">
         <Editor
-          height='calc(100vh - 430px)'
+          height='calc(100vh - 300px)'
           defaultLanguage="sql"
           value={code}
           onChange={handleEditorChange}

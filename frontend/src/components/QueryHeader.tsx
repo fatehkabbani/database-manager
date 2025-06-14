@@ -1,5 +1,5 @@
 import React from 'react'
-import { DollarSign, Menu , Star,Zap} from "lucide-react";
+import { DollarSign, Menu, Star, Zap } from "lucide-react";
 import { Button } from '@/components/ui/button';
 export function QueryHeader() {
   return (
