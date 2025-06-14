@@ -33,9 +33,16 @@ function Navbar() {
 
         </div>
         <div className='flex space-x-4'>
-          <Button variant="ghost" size="sm" className='rounded-0 cursor-pointer ring-0'>
-            <Info />
-          </Button>
+          <Tooltip>
+            <TooltipTrigger>
+              <Button variant="ghost" size="sm" className='rounded-0 cursor-pointer ring-0'>
+                <Info />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>View information</p>
+            </TooltipContent>
+          </Tooltip>
           <Tooltip>
             <TooltipTrigger>
               <Button variant="ghost" size="sm" className='rounded-0 cursor-pointer ring-0'>

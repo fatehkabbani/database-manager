@@ -13,7 +13,7 @@ function QueryFile({ queryNumber, isActive = false, onClose, onClick }: QueryFil
 
   return (
     <div
-      className={`flex flex-row justify-between items-center text-sm p-2 rounded cursor-pointer  ${
+      className={`flex flex-row justify-between items-center text-sm p-2 rounded-lg cursor-pointer  ${
         isActive
           ? 'text-white bg-blue-600'
           : 'text-white border-t-transparent'

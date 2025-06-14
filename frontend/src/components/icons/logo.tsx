@@ -9,4 +9,4 @@ import image from '@/components/icons/logo.svg'  // Ensure you have the correct 
     />
   )
 }
-export {Logo}
+export { Logo }
