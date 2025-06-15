@@ -10,7 +10,6 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip"
 function Navbar() {
-
   return (
     <header className='flex p-4 bg-background text-white'>
       <nav className='flex items-center justify-between w-full'>
