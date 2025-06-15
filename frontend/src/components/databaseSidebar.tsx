@@ -1,0 +1,127 @@
+import React from 'react'
+import { useState } from 'react'
+import {
+  Database,
+  Table,
+  Search,
+  ChevronRight,
+  ChevronDown,
+  Circle,
+  Zap,
+  Grid3X3,
+  Star,
+  Lock,
+  Code
+} from "lucide-react"
+import { Button } from "@/components/ui/button"
+import type { DatabaseItem } from '@/types'
+
+interface DatabaseSidebarProps {
+  databases: DatabaseItem[]
+  selectedDatabase: string
+  expandedDatabases: Set<string>
+  onDatabaseSelect: (dbName: string) => void
+  onToggleDatabase: (dbName: string) => void
+}
+
+export function DatabaseSidebar({
+  databases,
+  selectedDatabase,
+  expandedDatabases,
+  onDatabaseSelect,
+  onToggleDatabase
+}: DatabaseSidebarProps) {
+  const [searchTerm, setSearchTerm] = useState("")
+
+  const filteredDatabases = databases.filter(
+    (db) =>
+      db.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      db.tables.some((table) => table.toLowerCase().includes(searchTerm.toLowerCase())),
+  )
+
+  return (
+    <div className="p-4 border-b border-border h-full">
+      <div className="flex items-center gap-3 mb-4">
+        <div className="w-8 h-8 bg-primary/20 rounded-lg flex items-center justify-center">
+          <Database className="h-4 w-4 text-primary" />
+        </div>
+        <span className="font-semibold text-lg">sandbox</span>
+        <Circle className="h-2 w-2 text-green-500 fill-current ml-auto" />
+      </div>
+
+      <div className="flex items-center justify-between gap-1 mb-4">
+        <Button variant="ghost" className="cursor-pointer p-2 hover:bg-accent rounded-md transition-colors">
+          <Zap className="h-4 w-4" />
+        </Button>
+        <Button variant="ghost" className="cursor-pointer p-2 hover:bg-accent rounded-md transition-colors">
+          <Grid3X3 className="h-4 w-4" />
+        </Button>
+        <Button variant="ghost" className="cursor-pointer p-2 hover:bg-accent rounded-md transition-colors">
+          <Star className="h-4 w-4" />
+        </Button>
+        <Button variant="ghost" className="cursor-pointer p-2 hover:bg-accent rounded-md transition-colors">
+          <Lock className="h-4 w-4" />
+        </Button>
+        <Button variant="ghost" className="cursor-pointer p-2 hover:bg-accent rounded-md transition-colors">
+          <Code className="h-4 w-4" />
+        </Button>
+      </div>
+
+      <div className="flex-1 overflow-hidden p-0 h-full">
+        <div className="p-0 w-full">
+          <div className="relative mb-3">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <input
+              type="text"
+              placeholder="Search..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="w-full bg-input border border-border rounded-md pl-10 pr-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
+            />
+          </div>
+        </div>
+
+        <div className="flex-1 overflow-y-auto custom-scrollbar">
+          <div className="space-y-1">
+            {filteredDatabases.map((database) => (
+              <div key={database.name}>
+                <button
+                  onClick={() => {
+                    onToggleDatabase(database.name)
+                    onDatabaseSelect(database.name)
+                  }}
+                  className="w-full flex items-center gap-2 px-2 py-2 text-sm hover:bg-accent rounded-md transition-colors"
+                >
+                  {expandedDatabases.has(database.name) ? (
+                    <ChevronDown className="h-4 w-4" />
+                  ) : (
+                    <ChevronRight className="h-4 w-4" />
+                  )}
+                  <Database className="h-4 w-4" />
+                  <span className="flex-1 text-left truncate">{database.name}</span>
+                  <span className="text-xs bg-secondary text-secondary-foreground px-2 py-1 rounded">
+                    {database.tables.length}
+                  </span>
+                </button>
+
+                {expandedDatabases.has(database.name) && (
+                  <div className="ml-6 space-y-1 mt-1">
+                    {database.tables.map((table) => (
+                      <button
+                        key={table}
+                        className="w-full flex items-center gap-2 px-2 py-1.5 text-sm text-muted-foreground hover:text-foreground hover:bg-accent rounded-md transition-colors"
+                      >
+                        <Table className="h-3 w-3" />
+                        <span className="truncate">{table}</span>
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}

@@ -1,24 +1,19 @@
-import React from 'react'
-import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels'
-// import { IconFolder , IconClock , IconPlus } from '@tabler/icons-react';
+
 import {
-  Plus, Folder, Clock, Zap,
+  Zap,
   Grid3X3,
   Star,
   Lock,
   Code
 } from "lucide-react"
 import { Button } from '@/components/ui/button'
-import { ActionBar } from '@/components/ActionBar'
 import { QueryFile } from '@/components/items/queryFile'
 function setActiveQuery(QueryNumber: number) {
-  // Logic to set the active query
   console.log(`Setting query ${QueryNumber} as active`);
 
 }
 function SideBar() {
   return (
-
     <div className="h-full bg-background flex flex-col w-full">
       <div className="p-0 flex-1">
         <div className="flex items-center justify-between gap-1 mb-4">

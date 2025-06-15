@@ -1,5 +1,5 @@
 import React from 'react'
-import image from '@/components/icons/logo.svg'  // Ensure you have the correct path to your CSS file
+import image from '@/components/icons/logo.svg'
   function Logo() {
   return (
     <img src={image}
