@@ -44,7 +44,7 @@ export function QueryResults({ queryResults, isExecuting, onExecuteQuery, canExe
           <div className="space-y-4">
             <div className="flex items-center gap-4 text-sm">
               <span className="text-xs bg-secondary text-secondary-foreground px-2 py-1 rounded">
-                {queryResults.executionTime}s
+                {queryResults.executionTime}
               </span>
               <span className="text-muted-foreground">{queryResults.rowsAffected} rows affected</span>
             </div>
@@ -77,7 +77,7 @@ export function QueryResults({ queryResults, isExecuting, onExecuteQuery, canExe
         ) : (
           <div className="flex flex-col items-center justify-center h-full text-muted-foreground">
             <Zap className="h-8 w-8 mb-3 opacity-50" />
-            <p className="text-sm">Execute a SurrealQL query to view the results here</p>
+            <p className="text-sm">Execute a sql query to view the results here</p>
           </div>
         )}
       </div>

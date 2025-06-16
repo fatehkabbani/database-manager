@@ -1,11 +1,14 @@
-import React, { useState } from 'react'
+import React from 'react'
 import Editor from '@monaco-editor/react'
 
-export function TextEditor() {
-  const [code, setCode] = useState('')
+interface TextEditorProps {
+  value: string;
+  onChange: (value: string) => void;
+}
 
-  const handleEditorChange = (value: string | undefined) => {
-    setCode(value || '')
+export function TextEditor({ value, onChange }: TextEditorProps) {
+  const handleEditorChange = (newValue: string | undefined) => {
+    onChange(newValue || '');
   }
 
   return (
@@ -14,7 +17,7 @@ export function TextEditor() {
         <Editor
           height='calc(100vh - 300px)'
           defaultLanguage="sql"
-          value={code}
+          value={value}
           onChange={handleEditorChange}
           beforeMount={(monaco) => {
             monaco.editor.defineTheme('modern-dark', {
@@ -103,15 +106,11 @@ export function TextEditor() {
             showFoldingControls: 'always',
             foldingHighlight: true,
             foldingImportsByDefault: true,
-            // foldingRangeLimit: 5000,
             unfoldOnClickAfterEndOfLine: false,
             matchBrackets: 'always',
             renderValidationDecorations: 'on',
-            // renderIndentGuides: true,
             renderControlCharacters: true,
-            // renderIndicators: true,
             renderLineHighlightOnlyWhenFocus: false,
-            // renderWhitespace: 'none',
             scrollbar: {
               vertical: 'visible',
               horizontal: 'visible',

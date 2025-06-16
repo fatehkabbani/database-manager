@@ -9,7 +9,21 @@ export async function getTables() {
     return []
   }
 }
-
+export async function executeQuery(query: string) {
+  try {
+    const response = await fetchApi({
+      url: '/execute_query',
+      method: 'POST',
+      body: {
+        'query': query,
+      }
+    })
+    return response.data
+  } catch (error) {
+    console.error("Error executing query:", error)
+    return null
+  }
+}
 export async function getConnections() {
   try {
     const response = await fetchApi({

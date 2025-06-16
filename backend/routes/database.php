@@ -191,21 +191,30 @@ $router->map('POST', '/run_query', function () {
   $db = new Database();
   $query = trim($data['query'] ?? '');
 
-  // Check if query is empty
   if (!$query) {
     response('error', 'No query provided', null, 400);
   }
+
   try {
     $database = $db->getCurrentDatabase();
     if (!empty($database)) {
       $sql = 'USE ' . $database;
       $stmt = $db->pdo->query($sql);
     }
+
+    $startTime = microtime(true);
+
     $stmt = $db->pdo->query($query);
     $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    $endTime = microtime(true);
+    $executionTime = round(($endTime - $startTime) * 1000, 2);
+
     response('success', 'Query executed', [
       'columns' => array_keys($rows[0] ?? []),
-      'rows' => $rows
+      'rows' => $rows,
+      'rowsAffected' => $stmt->rowCount(),
+      'executionTime' => $executionTime . ' ms'
     ]);
   } catch (PDOException $e) {
     response('error', 'SQL error: ' . $e->getMessage(), null, 500);

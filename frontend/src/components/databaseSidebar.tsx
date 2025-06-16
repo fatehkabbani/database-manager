@@ -16,23 +16,23 @@ import {
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import type { DatabaseItem } from '@/types'
+
 interface DatabaseSidebarProps {
   databases: DatabaseItem[]
   selectedDatabase: string
   expandedDatabases: Set<string>
   onDatabaseSelect: (dbName: string) => void
   onToggleDatabase: (dbName: string) => void
+  onTableSelect: (table: string, database: DatabaseItem) => void
 }
-function handleSelectTable(table: string, database: DatabaseItem) {
-  console.log(`SELECT * FROM  ${database.name}.${table}`)
-  updateCode(`SELECT * FROM ${database.name}.${table};` , () => {})
-}
+
 export function DatabaseSidebar({
   databases,
   selectedDatabase,
   expandedDatabases,
   onDatabaseSelect,
-  onToggleDatabase
+  onToggleDatabase,
+  onTableSelect
 }: DatabaseSidebarProps) {
   const [searchTerm, setSearchTerm] = useState("")
 
@@ -41,6 +41,11 @@ export function DatabaseSidebar({
       db.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       db.tables.some((table) => table.toLowerCase().includes(searchTerm.toLowerCase())),
   )
+
+  const handleSelectTable = (table: string, database: DatabaseItem) => {
+    console.log(`SELECT * FROM  ${database.name}.${table}`)
+    onTableSelect(table, database)
+  }
 
   return (
     <div className="h-full flex flex-col">
@@ -117,9 +122,6 @@ export function DatabaseSidebar({
                   )}
                   <Database className="h-4 w-4 c" />
                   <span className="flex-1 text-left truncate">{database.name}</span>
-                  {/* <span className="text-xs bg-secondary text-secondary-foreground px-2 py-1 rounded">
-                    {database.tables.length}
-                  </span> */}
                 </button>
 
                 {expandedDatabases.has(database.name) && (
@@ -128,10 +130,11 @@ export function DatabaseSidebar({
                       <button
                         key={table}
                         className="w-full flex items-center gap-2 px-2 py-1.5 text-sm text-muted-foreground hover:text-foreground hover:bg-accent rounded-md transition-colors cursor-pointer"
+                        onClick={() => handleSelectTable(table, database)}
                       >
                         <Table className="h-3 w-3" />
                         <span className="truncate">{table}</span>
-                        <Plus className="h-3 w-3 text-muted-foreground ml-auto" onClick={() => handleSelectTable(table,database)} />
+                        <Plus className="h-3 w-3 text-muted-foreground ml-auto" />
                       </button>
                     ))}
                   </div>

@@ -15,6 +15,8 @@ import { QueryResults } from '@/components/QueryResults'
 import { useKeyboardShortcuts } from '@/hooks/useKeyboardShortcuts'
 import { SidebarToggle } from "@/components/SidebarToggle"
 import { SidebarActions } from "@/components/SidebarActions"
+import { fetchApi } from "@/utils/fetchApi"
+import type { Query } from "@tanstack/react-query"
 function DatabaseManager() {
   // State management
   const [connections, setConnections] = useState<Connection[]>([])
@@ -24,6 +26,9 @@ function DatabaseManager() {
   const [expandedDatabases, setExpandedDatabases] = useState<Set<string>>(new Set([""]))
   const [isConnectionDialogOpen, setIsConnectionDialogOpen] = useState(false)
   const [selected, setSelected] = useState("Database")
+
+  // Code editor state
+  const [editorCode, setEditorCode] = useState<string>("")
 
   // Query file management
   const [queryFiles, setQueryFiles] = useState<QueryFile[]>([
@@ -73,6 +78,36 @@ function DatabaseManager() {
     loadData()
   }, [])
 
+  // Handle table selection from DatabaseSidebar
+  const handleTableSelect = useCallback((table: string, database: DatabaseItem) => {
+    const newCode = `SELECT * FROM ${database.name}.${table};`
+    setEditorCode(newCode)
+
+    setQueryFiles(prev =>
+      prev.map(q =>
+        q.id === activeQueryFile
+          ? { ...q, content: newCode, isUnsaved: true }
+          : q
+      )
+    )
+
+    showToast(`Added ${database.name}.${table} to editor`, "success")
+  }, [activeQueryFile, showToast])
+
+  // Handle editor content changes
+  const handleEditorChange = useCallback((value: string) => {
+    setEditorCode(value)
+
+    // Update the current query file content
+    setQueryFiles(prev =>
+      prev.map(q =>
+        q.id === activeQueryFile
+          ? { ...q, content: value, isUnsaved: true }
+          : q
+      )
+    )
+  }, [activeQueryFile])
+
   // Query management functions
   const createNewQuery = useCallback(() => {
     const newQuery: QueryFile = {
@@ -83,6 +118,7 @@ function DatabaseManager() {
     }
     setQueryFiles([...queryFiles, newQuery])
     setActiveQueryFile(newQuery.id)
+    setEditorCode("")
   }, [queryFiles])
 
   const closeQueryFile = useCallback(
@@ -93,32 +129,60 @@ function DatabaseManager() {
       } else {
         setQueryFiles(newFiles)
         if (activeQueryFile === queryId) {
-          setActiveQueryFile(newFiles[0].id)
+          const newActiveQuery = newFiles[0]
+          setActiveQueryFile(newActiveQuery.id)
+          setEditorCode(newActiveQuery.content)
         }
       }
     },
     [activeQueryFile, createNewQuery, queryFiles],
   )
 
+  // Update editor when switching tabs
+  useEffect(() => {
+    const currentQuery = queryFiles.find(q => q.id === activeQueryFile)
+    if (currentQuery) {
+      setEditorCode(currentQuery.content)
+    }
+  }, [activeQueryFile, queryFiles])
+
   const executeQuery = async () => {
-    if (!activeQuery?.content.trim()) return
+    if (!editorCode.trim()) return
 
     setIsExecuting(true)
 
     // Simulate query execution
-    setTimeout(() => {
-      const mockResult: QueryResult = {
-        columns: ["id", "email", "first_name", "last_name", "created_at"],
-        rows: [
-          { id: 1, email: "john@example.com", first_name: "John", last_name: "Doe", created_at: "2024-01-15 10:30:00" },
-          { id: 2, email: "jane@example.com", first_name: "Jane", last_name: "Smith", created_at: "2024-01-16 14:20:00" },
-          { id: 3, email: "bob@example.com", first_name: "Bob", last_name: "Johnson", created_at: "2024-01-17 09:15:00" },
-        ],
-        executionTime: 0.045,
-        rowsAffected: 3,
-        success: true,
+    setTimeout(async () => {
+      // data
+      const response = await fetchApi({
+        url: '/run_query',
+        method: 'POST',
+        body: {
+          query: editorCode,
+        }
+      })
+      if (response.status !== 'success') {
+        showToast(`Error executing query: ${response.status}`, "warning")
+        setIsExecuting(false)
+        return
       }
 
+      // const mockResult: QueryResult = await fetchApi({
+      //   url: '/run_query',
+      //   method: 'POST',
+      //   body: {
+      //     query: editorCode,
+
+      //   }
+      // })
+      const mockResult: QueryResult = {
+        columns: response.data.columns || [],
+        rows: response.data.rows || [],
+        executionTime: response.data.executionTime || 0.000,
+        rowsAffected: response.data.rowsAffected || 0,
+        success: response.success || false,
+      }
+      console.log("Query executed successfully:", response.data.rows)
       setQueryResults(mockResult)
       setIsExecuting(false)
     }, 1000)
@@ -150,7 +214,6 @@ function DatabaseManager() {
   })
 
   const activeConnectionData = connections.find((c) => c.id === activeConnection)
-
   return (
     <div className="h-screen bg-gray-900 text-white flex flex-col">
       <Navbar />
@@ -170,6 +233,7 @@ function DatabaseManager() {
               expandedDatabases={expandedDatabases}
               onDatabaseSelect={setSelectedDatabase}
               onToggleDatabase={toggleDatabase}
+              onTableSelect={handleTableSelect}
             />
           ) : (
             <QuerySidebar />
@@ -183,7 +247,12 @@ function DatabaseManager() {
           />
 
           {/* Bottom Section */}
-          <SidebarActions   />
+          <SidebarActions
+            savedQueriesOpen={savedQueriesOpen}
+            queryHistoryOpen={queryHistoryOpen}
+            onToggleSavedQueries={() => setSavedQueriesOpen(!savedQueriesOpen)}
+            onToggleQueryHistory={() => setQueryHistoryOpen(!queryHistoryOpen)}
+          />
         </div>
 
         {/* Main Content */}
@@ -203,7 +272,10 @@ function DatabaseManager() {
               <div className="flex-1 relative">
                 <div className="absolute inset-0 flex">
                   <div className="flex-1">
-                    <TextEditor />
+                    <TextEditor
+                      value={editorCode}
+                      onChange={handleEditorChange}
+                    />
                   </div>
                 </div>
               </div>
@@ -214,7 +286,7 @@ function DatabaseManager() {
               queryResults={queryResults}
               isExecuting={isExecuting}
               onExecuteQuery={executeQuery}
-              canExecute={!!activeQuery?.content.trim()}
+              canExecute={!!editorCode.trim()}
             />
           </div>
 
