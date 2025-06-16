@@ -40,49 +40,64 @@ export function DatabaseSidebar({
   )
 
   return (
-    <div className="p-4 border-b border-border h-full">
-      <div className="flex items-center gap-3 mb-4">
-        <div className="w-8 h-8 bg-primary/20 rounded-lg flex items-center justify-center">
-          <Database className="h-4 w-4 text-primary" />
-        </div>
-        <span className="font-semibold text-lg">sandbox</span>
-        <Circle className="h-2 w-2 text-green-500 fill-current ml-auto" />
-      </div>
-
-      <div className="flex items-center justify-between gap-1 mb-4">
-        <Button variant="ghost" className="cursor-pointer p-2 hover:bg-accent rounded-md transition-colors">
-          <Zap className="h-4 w-4" />
-        </Button>
-        <Button variant="ghost" className="cursor-pointer p-2 hover:bg-accent rounded-md transition-colors">
-          <Grid3X3 className="h-4 w-4" />
-        </Button>
-        <Button variant="ghost" className="cursor-pointer p-2 hover:bg-accent rounded-md transition-colors">
-          <Star className="h-4 w-4" />
-        </Button>
-        <Button variant="ghost" className="cursor-pointer p-2 hover:bg-accent rounded-md transition-colors">
-          <Lock className="h-4 w-4" />
-        </Button>
-        <Button variant="ghost" className="cursor-pointer p-2 hover:bg-accent rounded-md transition-colors">
-          <Code className="h-4 w-4" />
-        </Button>
-      </div>
-
-      <div className="flex-1 overflow-hidden p-0 h-full">
-        <div className="p-0 w-full">
-          <div className="relative mb-3">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-            <input
-              type="text"
-              placeholder="Search..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full bg-input border border-border rounded-md pl-10 pr-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
-            />
+    <div className="h-full flex flex-col">
+      {/* Fixed Header */}
+      <div className="flex-shrink-0 p-4 border-b border-border">
+        <div className="flex items-center gap-3 mb-4">
+          <div className="w-8 h-8 bg-primary/20 rounded-lg flex items-center justify-center">
+            <Database className="h-4 w-4 text-primary" />
           </div>
+          <span className="font-semibold text-lg">sandbox</span>
+          <Circle className="h-2 w-2 text-green-500 fill-current ml-auto" />
         </div>
 
-        <div className="flex-1 overflow-y-auto custom-scrollbar">
-          <div className="space-y-1">
+        {/* Action Buttons */}
+        <div className="flex items-center justify-between gap-1 mb-4">
+          <Button variant="ghost" className="cursor-pointer p-2 hover:bg-accent rounded-md transition-colors">
+            <Zap className="h-4 w-4" />
+          </Button>
+          <Button variant="ghost" className="cursor-pointer p-2 hover:bg-accent rounded-md transition-colors">
+            <Grid3X3 className="h-4 w-4" />
+          </Button>
+          <Button variant="ghost" className="cursor-pointer p-2 hover:bg-accent rounded-md transition-colors">
+            <Star className="h-4 w-4" />
+          </Button>
+          <Button variant="ghost" className="cursor-pointer p-2 hover:bg-accent rounded-md transition-colors">
+            <Lock className="h-4 w-4" />
+          </Button>
+          <Button variant="ghost" className="cursor-pointer p-2 hover:bg-accent rounded-md transition-colors">
+            <Code className="h-4 w-4" />
+          </Button>
+        </div>
+
+        {/* Search Bar */}
+        <div className="relative">
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <input
+            type="text"
+            placeholder="Search..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="w-full bg-input border border-border rounded-md pl-10 pr-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
+          />
+        </div>
+      </div>
+
+      {/* Scrollable Database List - Fixed height with scroll */}
+      <div className=" min-h-0 px-4  ">
+        <div className="overflow-y-auto pr-2 h-[450px]  [&::-webkit-scrollbar]:w-0.5
+  [&::-webkit-scrollbar-thumb]:rounded-full
+  [&::-webkit-scrollbar-thumb]:bg-primary/50
+  [&::-webkit-scrollbar-track]:rounded-full
+  [&::-webkit-scrollbar]:bg-transparent
+  [&::-webkit-scrollbar-thumb:hover]:bg-primary/70
+  [&::-webkit-scrollbar-thumb:active]:bg-primary/80
+  [&::-webkit-scrollbar-track:hover]:bg-secondary/20
+  [&::-webkit-scrollbar-track:active]:bg-secondary/30
+  [&::-webkit-scrollbar-thumb:focus]:bg-primary/60
+  [&::-webkit-scrollbar-track]:bg-[#181a2d]
+  ">
+          <div className="space-y-1 pb-4">
             {filteredDatabases.map((database) => (
               <div key={database.name}>
                 <button

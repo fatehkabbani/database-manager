@@ -15,7 +15,7 @@ export function SidebarActions({
   onToggleQueryHistory
 }: SidebarActionsProps) {
   return (
-    <div className="border-t border-border">
+    <div className="flex-shrink-0 border-t border-border">
       <button
         onClick={onToggleSavedQueries}
         className="w-full flex items-center gap-3 px-4 py-3 hover:bg-accent transition-colors"
