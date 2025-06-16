@@ -11,11 +11,11 @@ import {
   Grid3X3,
   Star,
   Lock,
+  Plus,
   Code
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import type { DatabaseItem } from '@/types'
-
 interface DatabaseSidebarProps {
   databases: DatabaseItem[]
   selectedDatabase: string
@@ -23,7 +23,10 @@ interface DatabaseSidebarProps {
   onDatabaseSelect: (dbName: string) => void
   onToggleDatabase: (dbName: string) => void
 }
-
+function handleSelectTable(table: string, database: DatabaseItem) {
+  console.log(`SELECT * FROM  ${database.name}.${table}`)
+  updateCode(`SELECT * FROM ${database.name}.${table};` , () => {})
+}
 export function DatabaseSidebar({
   databases,
   selectedDatabase,
@@ -105,18 +108,18 @@ export function DatabaseSidebar({
                     onToggleDatabase(database.name)
                     onDatabaseSelect(database.name)
                   }}
-                  className="w-full flex items-center gap-2 px-2 py-2 text-sm hover:bg-accent rounded-md transition-colors"
+                  className="w-full flex items-center gap-2 px-2 py-2 text-sm hover:bg-accent rounded-md transition-colors cursor-pointer"
                 >
                   {expandedDatabases.has(database.name) ? (
                     <ChevronDown className="h-4 w-4" />
                   ) : (
                     <ChevronRight className="h-4 w-4" />
                   )}
-                  <Database className="h-4 w-4" />
+                  <Database className="h-4 w-4 c" />
                   <span className="flex-1 text-left truncate">{database.name}</span>
-                  <span className="text-xs bg-secondary text-secondary-foreground px-2 py-1 rounded">
+                  {/* <span className="text-xs bg-secondary text-secondary-foreground px-2 py-1 rounded">
                     {database.tables.length}
-                  </span>
+                  </span> */}
                 </button>
 
                 {expandedDatabases.has(database.name) && (
@@ -124,10 +127,11 @@ export function DatabaseSidebar({
                     {database.tables.map((table) => (
                       <button
                         key={table}
-                        className="w-full flex items-center gap-2 px-2 py-1.5 text-sm text-muted-foreground hover:text-foreground hover:bg-accent rounded-md transition-colors"
+                        className="w-full flex items-center gap-2 px-2 py-1.5 text-sm text-muted-foreground hover:text-foreground hover:bg-accent rounded-md transition-colors cursor-pointer"
                       >
                         <Table className="h-3 w-3" />
                         <span className="truncate">{table}</span>
+                        <Plus className="h-3 w-3 text-muted-foreground ml-auto" onClick={() => handleSelectTable(table,database)} />
                       </button>
                     ))}
                   </div>
