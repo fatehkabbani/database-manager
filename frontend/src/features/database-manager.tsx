@@ -80,7 +80,7 @@ function DatabaseManager() {
 
   // Handle table selection from DatabaseSidebar
   const handleTableSelect = useCallback((table: string, database: DatabaseItem) => {
-    const newCode = `SELECT * FROM ${database.name}.${table};`
+    const newCode = `SELECT * FROM ${database.name}.\`${table}\`;`
     setEditorCode(newCode)
 
     setQueryFiles(prev =>

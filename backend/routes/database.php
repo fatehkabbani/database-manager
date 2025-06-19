@@ -103,7 +103,10 @@ $router->map('POST', '/list_columns', function () {
 
     // select the database
     if (!empty($database)) {
-      $conn->exec("USE `$database`");
+      if($conn->checkDatabase($database)){
+        $conn->exec("USE `$database`");
+      };
+
     }
 
     // if type information exist show table information
@@ -197,9 +200,13 @@ $router->map('POST', '/run_query', function () {
 
   try {
     $database = $db->getCurrentDatabase();
+    
     if (!empty($database)) {
-      $sql = 'USE ' . $database;
-      $stmt = $db->pdo->query($sql);
+      if($db->checkDatabase($database)){
+        $sql = 'USE ' . $database;
+        $stmt = $db->pdo->query($sql);
+      }
+
     }
 
     $startTime = microtime(true);
