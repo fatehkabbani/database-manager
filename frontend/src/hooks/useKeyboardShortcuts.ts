@@ -1,5 +1,6 @@
 import { useCallback, useEffect } from 'react'
 import type { QueryFile } from '../types'
+import { ShortcutToast } from "@/components/shortcut-toast"
 
 interface UseKeyboardShortcutsProps {
   activeQuery: QueryFile | undefined
@@ -12,7 +13,6 @@ interface UseKeyboardShortcutsProps {
   onCloseQueryFile: (queryId: string) => void
   onSetActiveQueryFile: (queryId: string) => void
   onSetQueryResults: (results: any) => void
-  showToast: (message: string, type: string) => void
 }
 
 export function useKeyboardShortcuts({
@@ -25,8 +25,7 @@ export function useKeyboardShortcuts({
   onCreateNewQuery,
   onCloseQueryFile,
   onSetActiveQueryFile,
-  onSetQueryResults,
-  showToast
+  onSetQueryResults
 }: UseKeyboardShortcutsProps) {
   const handleKeyDown = useCallback(
     (event: KeyboardEvent) => {
@@ -38,9 +37,9 @@ export function useKeyboardShortcuts({
         event.preventDefault()
         if (activeQuery?.content.trim() && !isExecuting) {
           onExecuteQuery()
-          showToast("Query executed", "success")
+          ShortcutToast({ message: "Query executed", type: "success" })
         } else if (!activeQuery?.content.trim()) {
-          showToast("No query to execute", "warning")
+          ShortcutToast({ message: "No query to execute", type: "warning" })
         }
         return
       }
@@ -49,14 +48,14 @@ export function useKeyboardShortcuts({
       if (ctrlKey && event.key === "n") {
         event.preventDefault()
         onCreateNewQuery()
-        showToast("New query created", "success")
+        ShortcutToast({ message: "New query created", type: "success" })
         return
       }
 
       // Ctrl/Cmd + S: Save query
       if (ctrlKey && event.key === "s") {
         event.preventDefault()
-        showToast("Save functionality coming soon", "info")
+        ShortcutToast({ message: "Save functionality coming soon", type: "info" })
         return
       }
 
@@ -66,9 +65,9 @@ export function useKeyboardShortcuts({
         if (queryFiles.length > 1 && activeQueryFile) {
           const queryName = activeQuery?.name || "Query"
           onCloseQueryFile(activeQueryFile)
-          showToast(`${queryName} closed`, "info")
+          ShortcutToast({ message: `${queryName} closed`, type: "info" })
         } else {
-          showToast("Cannot close the last query", "warning")
+          ShortcutToast({ message: "Cannot close the last query", type: "warning" })
         }
         return
       }
@@ -77,7 +76,7 @@ export function useKeyboardShortcuts({
       if (ctrlKey && event.key === "t") {
         event.preventDefault()
         onCreateNewQuery()
-        showToast("New query created", "success")
+        ShortcutToast({ message: "New query created", type: "success" })
         return
       }
 
@@ -87,7 +86,7 @@ export function useKeyboardShortcuts({
         const tabIndex = Number.parseInt(event.key) - 1
         if (tabIndex < queryFiles.length) {
           onSetActiveQueryFile(queryFiles[tabIndex].id)
-          showToast(`Switched to ${queryFiles[tabIndex].name}`, "info")
+          ShortcutToast({ message: `Switched to ${queryFiles[tabIndex].name}`, type: "info" })
         }
         return
       }
@@ -97,7 +96,7 @@ export function useKeyboardShortcuts({
         event.preventDefault()
         if (activeQuery?.content.trim() && !isExecuting) {
           onExecuteQuery()
-          showToast("Query executed", "success")
+          ShortcutToast({ message: "Query executed", type: "success" })
         }
         return
       }
@@ -106,12 +105,12 @@ export function useKeyboardShortcuts({
       if (event.key === "Escape") {
         if (queryResults) {
           onSetQueryResults(null)
-          showToast("Results cleared", "info")
+          ShortcutToast({ message: "Results cleared", type: "info" })
         }
         return
       }
     },
-    [activeQuery, isExecuting, queryFiles, activeQueryFile, queryResults, onExecuteQuery, onCreateNewQuery, onCloseQueryFile, onSetActiveQueryFile, onSetQueryResults, showToast],
+    [activeQuery, isExecuting, queryFiles, activeQueryFile, queryResults, onExecuteQuery, onCreateNewQuery, onCloseQueryFile, onSetActiveQueryFile, onSetQueryResults, ShortcutToast],
   )
 
   useEffect(() => {

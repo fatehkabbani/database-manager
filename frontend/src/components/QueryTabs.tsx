@@ -18,7 +18,7 @@ export function QueryTabs({ queryFiles, activeQueryFile, onTabChange, onTabClose
           <div
             key={query.id}
             className={`flex items-center gap-2 px-4 py-3 border-r border-border cursor-pointer hover:bg-primary/50 transition-colors ${
-              activeQueryFile === query.id ? "bg-background" : ""
+              activeQueryFile === query.id ? "background-primary" : ""
             }`}
             onClick={() => onTabChange(query.id)}
           >

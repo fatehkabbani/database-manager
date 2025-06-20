@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/tooltip"
 function Navbar() {
   return (
-    <header className='flex p-4 bg-background text-white'>
+    <header className='flex p-4 background-primary text-white'>
       <nav className='flex items-center justify-between w-full'>
         <div className='flex flex-start space-x-4'>
           <Logo />

@@ -48,7 +48,7 @@ export function DatabaseSidebar({
   }
 
   return (
-    <div className="h-full flex flex-col">
+    <div className="h-[80vh] flex flex-col">
       {/* Fixed Header */}
       <div className="flex-shrink-0 p-4 border-b border-border">
         <div className="flex items-center gap-3 mb-4">

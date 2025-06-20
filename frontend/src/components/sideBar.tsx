@@ -14,7 +14,7 @@ function setActiveQuery(QueryNumber: number) {
 }
 function SideBar() {
   return (
-    <div className="h-full bg-background flex flex-col w-full">
+    <div className="h-full  flex flex-col w-full">
       <div className="p-0 flex-1">
         <div className="flex items-center justify-between gap-1 mb-4">
           <Button variant="ghost" className="cursor-pointer p-2 hover:bg-accent rounded-md transition-colors">

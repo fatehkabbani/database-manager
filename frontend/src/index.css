@@ -2,7 +2,46 @@
 @import "tw-animate-css";
 
 @custom-variant dark (&:is(.dark *));
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--primary) transparent;
+}
 
+/* For Webkit-based browsers */
+*::-webkit-scrollbar {
+  width: 0.135rem;
+  background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+  border-radius: 50%;
+  background: var(--primary);
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background: rgba(74, 158, 255, 0.7); /* --primary/70 */
+}
+
+*::-webkit-scrollbar-thumb:active {
+  background: rgba(74, 158, 255, 0.8); /* --primary/80 */
+}
+
+*::-webkit-scrollbar-thumb:focus {
+  background: rgba(74, 158, 255, 0.6); /* --primary/60 */
+}
+
+*::-webkit-scrollbar-track {
+  border-radius: 50%;
+  background: #181a2d;
+}
+
+*::-webkit-scrollbar-track:hover {
+  background: rgba(108, 99, 255, 0.2); /* --secondary/20 */
+}
+
+*::-webkit-scrollbar-track:active {
+  background: rgba(108, 99, 255, 0.3); /* --secondary/30 */
+}
 :root {
   --radius: 0.5rem;
   --background: linear-gradient(135deg, #0a0a1a 0%, #1a1a2e 100%);
@@ -44,7 +83,9 @@
 --secondary: oklch(24.78% 0.000 89.88);
 --accent: oklch(77.54% 0.173 65.37); */
 
-
+.background-primary{
+  background: var(--background) !important;
+}
 .dark {
   --background: linear-gradient(135deg, #0a0a1a 0%, #1a1a2e 100%);
   --foreground: #e6f1ff;
@@ -64,11 +105,6 @@
   --border: rgba(74, 158, 255, 0.2);
   --input: rgba(74, 158, 255, 0.1);
   --ring: #4a9eff;
-  --chart-1: #4a9eff;
-  --chart-2: #6c63ff;
-  --chart-3: #00d4ff;
-  --chart-4: #ff6b6b;
-  --chart-5: #45b7d1;
   --sidebar: rgba(10, 10, 26, 0.95);
   --sidebar-foreground: #e6f1ff;
   --sidebar-primary: #4a9eff;
@@ -102,12 +138,6 @@
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
-  --color-chart-1: var(--chart-1);
-  --color-chart-2: var(--chart-2);
-  --color-chart-3: var(--chart-3);
-  --color-chart-4: var(--chart-4);
-  --color-chart-5: var(--chart-5);
-  --color-sidebar: var(--sidebar);
   --color-sidebar-foreground: var(--sidebar-foreground);
   --color-sidebar-primary: var(--sidebar-primary);
   --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);

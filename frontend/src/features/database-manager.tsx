@@ -16,7 +16,6 @@ import { useKeyboardShortcuts } from '@/hooks/useKeyboardShortcuts'
 import { SidebarToggle } from "@/components/SidebarToggle"
 import { SidebarActions } from "@/components/SidebarActions"
 import { fetchApi } from "@/utils/fetchApi"
-import type { Query } from "@tanstack/react-query"
 function DatabaseManager() {
   // State management
   const [connections, setConnections] = useState<Connection[]>([])
@@ -151,41 +150,77 @@ function DatabaseManager() {
 
     setIsExecuting(true)
 
-    // Simulate query execution
-    setTimeout(async () => {
-      // data
-      const response = await fetchApi({
-        url: '/run_query',
-        method: 'POST',
-        body: {
-          query: editorCode,
-        }
-      })
-      if (response.status !== 'success') {
-        showToast(`Error executing query: ${response.status}`, "warning")
-        setIsExecuting(false)
-        return
-      }
+    // const response = await fetchApi({
+    //   url: '/run_query',
+    //   method: 'POST',
+    //   body: {
+    //     query: editorCode,
+    //   }
+    // })
+    // if (response.status !== 'success') {
+    //   showToast(`Error executing query: ${response.status}`, "warning")
+    //   setIsExecuting(false)
+    //   return
+    // }
 
-      // const mockResult: QueryResult = await fetchApi({
-      //   url: '/run_query',
-      //   method: 'POST',
-      //   body: {
-      //     query: editorCode,
 
-      //   }
-      // })
-      const mockResult: QueryResult = {
-        columns: response.data.columns || [],
-        rows: response.data.rows || [],
-        executionTime: response.data.executionTime || 0.000,
-        rowsAffected: response.data.rowsAffected || 0,
-        success: response.success || false,
-      }
-      console.log("Query executed successfully:", response.data.rows)
-      setQueryResults(mockResult)
-      setIsExecuting(false)
-    }, 1000)
+    // const mockResult: QueryResult = {
+    //   columns: response.data.columns || [],
+    //   rows: response.data.rows || [],
+    //   executionTime: response.data.executionTime || 0.000,
+    //   rowsAffected: response.data.rowsAffected || 0,
+    //   success: response.success || false,
+    // }
+    const mockResult: QueryResult = {
+      columns: ["id", "name", "email", "created_at", "is_active", "department_id"],
+      rows: [
+        {
+          id: 1,
+          name: "John Doe",
+          email: "john.doe@company.comjohn.doe@company.comjohn.doe@company.comjohn.doe@company.comjohn.doe@company.comjohn.doe@company.comjohn.doe@company.comjohn.doe@company.comjohn.doe@company.comjohn.doe@company.comjohn.doe@company.com",
+          created_at: "2024-01-15 10:30:00",
+          is_active: true,
+          department_id: 101,
+        },
+        {
+          id: 2,
+          name: "Jane Smith",
+          email: "jane.smith@company.com",
+          created_at: "2024-01-16 14:22:00",
+          is_active: true,
+          department_id: 102,
+        },
+        {
+          id: 3,
+          name: "Bob Johnson",
+          email: "bob.johnson@company.com",
+          created_at: "2024-01-17 09:15:00",
+          is_active: false,
+          department_id: 101,
+        },
+        {
+          id: 4,
+          name: "Alice Brown",
+          email: "alice.brown@company.com",
+          created_at: "2024-01-18 16:45:00",
+          is_active: true,
+          department_id: 103,
+        },
+        {
+          id: 5,
+          name: "Charlie Wilson",
+          email: null,
+          created_at: "2024-01-19 11:30:00",
+          is_active: true,
+          department_id: 102,
+        },
+      ],
+      rowsAffected: 5,
+      executionTime: 0.023,
+      success: true,
+    }
+    setQueryResults(mockResult)
+    setIsExecuting(false)
   }
 
   const toggleDatabase = (dbName: string) => {
@@ -209,15 +244,14 @@ function DatabaseManager() {
     onCreateNewQuery: createNewQuery,
     onCloseQueryFile: closeQueryFile,
     onSetActiveQueryFile: setActiveQueryFile,
-    onSetQueryResults: setQueryResults,
-    showToast
+    onSetQueryResults: setQueryResults
   })
 
   const activeConnectionData = connections.find((c) => c.id === activeConnection)
   return (
-    <div className="h-screen bg-gray-900 text-white flex flex-col">
+    <div className="h-screen  text-forground flex flex-col background-primary" >
       <Navbar />
-      <div className="h-screen flex bg-background text-foreground overflow-hidden">
+      <div className="h-screen flex  text-foreground overflow-hidden background-primary" >
         <ActionBar />
 
         {/* Left Sidebar */}

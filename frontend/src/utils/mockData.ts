@@ -23,9 +23,17 @@ export const createMockQueryResult = (): QueryResult => ({
   rows: [
     { id: 1, email: "john@example.com", first_name: "John", last_name: "Doe", created_at: "2024-01-15 10:30:00" },
     { id: 2, email: "jane@example.com", first_name: "Jane", last_name: "Smith", created_at: "2024-01-16 14:20:00" },
+    { id: 2, email: "jane@example.com", first_name: "Jane", last_name: "Smith", created_at: "2024-01-16 14:20:00" },
+    { id: 2, email: "jane@example.com", first_name: "Jane", last_name: "Smith", created_at: "2024-01-16 14:20:00" },
+    { id: 2, email: "jane@example.com", first_name: "Jane", last_name: "Smith", created_at: "2024-01-16 14:20:00" },
+    { id: 2, email: "jane@example.com", first_name: "Jane", last_name: "Smith", created_at: "2024-01-16 14:20:00" },
+    { id: 2, email: "jane@example.com", first_name: "Jane", last_name: "Smith", created_at: "2024-01-16 14:20:00" },
+    { id: 2, email: "jane@example.com", first_name: "Jane", last_name: "Smith", created_at: "2024-01-16 14:20:00" },
+    { id: 2, email: "jane@example.com", first_name: "Jane", last_name: "Smith", created_at: "2024-01-16 14:20:00" },
+    { id: 2, email: "jane@example.com", first_name: "Jane", last_name: "Smith", created_at: "2024-01-16 14:20:00" },
     { id: 3, email: "bob@example.com", first_name: "Bob", last_name: "Johnson", created_at: "2024-01-17 09:15:00" },
   ],
   executionTime: 0.045,
-  rowsAffected: 3,
+  rowsAffected: 10,
   success: true,
 })
