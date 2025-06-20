@@ -208,7 +208,11 @@ $router->map('POST', '/run_query', function () {
       }
 
     }
-
+    $parsedQuery = $db->parseSQLQuery($query);
+    if ($parsedQuery['type'] === 'unknown') {
+      response('error', 'Unsupported query type', null, 400);
+    }
+    
     $startTime = microtime(true);
 
     $stmt = $db->pdo->query($query);
