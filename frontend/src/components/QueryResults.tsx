@@ -1,57 +1,89 @@
 "use client"
-import { Zap, Play, Download, Copy, RefreshCw, Database, Clock, Hash, DollarSign,MailIcon,KeyRound } from "lucide-react"
+import { Zap, Play, Download, Copy, RefreshCw, Database, Clock, Hash, DollarSign, MailIcon, KeyRound, CreditCard, ChartNoAxesColumn } from "lucide-react"
 import type { QueryResult } from "../types"
 import { Button } from "./ui/button"
-// side quest format if type is json
+import { JsonDialog } from "@/components/jsonDialog"
+
+// side quest format if type is json (ig its about 80% done)
 interface QueryResultsProps {
   queryResults: QueryResult | null
   isExecuting: boolean
   onExecuteQuery: () => void
   canExecute: boolean
 }
+function checkJson(value: string): boolean {
+  try {
+    JSON.parse(value)
+  } catch (e) {
+    return false
+  }
+  return true;
+}
+const getColumnIcon = (columnName: string) => {
+  const name = columnName.toLowerCase()
+  if (name.includes("id") || name.includes("key")) {
+    return <KeyRound className="h-3 w-3 text-yellow-500" />
+  }
+  if (name.includes("date") || name.includes("time") || name.includes("created") || name.includes("updated")) {
+    return <Clock className="h-3 w-3 text-secondary" />
+  }
+  if (name.includes("amount") || name.includes("price") || name.includes("cost")) {
+    return <DollarSign className="h-3 w-3 text-green-500" />
+  }
+  if (name.includes("card") || name.includes("payment")) {
+    return <CreditCard className="h-3 w-3 text-green-500" />
+  }
 
+  if (name.includes("email") || name.includes("contact")) {
+    return <MailIcon className="h-3 w-3 text-blue-500" />
+  }
+  if (name.includes('password') || name.includes('secret') || name.includes('token')) {
+    return <KeyRound className="h-3 w-3 text-red-500" />
+  }
+  if (name.includes('status') || name.includes('state') || name.includes('flag')) {
+    return <ChartNoAxesColumn className="h-3 w-3 text-orange-500" />
+  }
+
+  return <Database className="h-3 w-3 text-muted-foreground" />
+}
 export function QueryResults({ queryResults, isExecuting, onExecuteQuery, canExecute }: QueryResultsProps) {
+
   const formatCellValue = (value: any) => {
-      if(!value){
-        return value
+    if (!value) return <span className="text-sm break-words text-red-500">NULL</span>
+
+
+    if (checkJson(value)) {
+      try {
+        const parsed = JSON.parse(value)
+
+        if (typeof parsed === "object" && parsed !== null) {
+          return (
+            <JsonDialog
+              jsonData={parsed}
+              trigger={
+                <span
+                  className="text-blue-500 underline text-sm cursor-pointer"
+                >
+                  [View JSON]
+                </span>
+              }
+            />
+          )
+        }
+
+        if (typeof parsed === "number") {
+          return <span className="text-sm break-words text-yellow-200">{value}</span>
+        }
+      } catch (e) {
+        // fallback below
       }
-      if (value.length > 50) {
-        return (
-          <div className="group relative">
-            <span className="text-foreground block truncate cursor-help" title={value}>
-              {value.slice(0, 25)}...
-            </span>
-            <div className="absolute left-0 top-full mt-1 p-2 bg-popover border border-border rounded-md shadow-lg z-50 max-w-xs opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
-              <span className="text-xs text-popover-foreground break-words">{value}</span>
-            </div>
-          </div>
-        )
-      }
-      return <span className="text-foreground text-sm break-words">{value}</span>
+    }
+
+    return <span className="text-foreground text-sm break-words">{value}</span>
   }
 
-  const getColumnIcon = (columnName: string) => {
-    const name = columnName.toLowerCase()
-    if (name.includes("id") || name.includes("key")) {
-      return <KeyRound className="h-3 w-3 text-yellow-500" />
-    }
-    if (name.includes("date") || name.includes("time") || name.includes("created") || name.includes("updated")) {
-      return <Clock className="h-3 w-3 text-secondary" />
-    }
-    if (name.includes("amount") || name.includes("price") || name.includes("cost")) {
-      return <DollarSign className="h-3 w-3 text-green-500" />
-    }
-    if (name.includes("status") || name.includes("state")) {
-      return <Database className="h-3 w-3 text-blue-500" />
-    }
-    if (name.includes("email") || name.includes("contact")) {
-      return <MailIcon className="h-3 w-3 text-blue-500" />
-    }
-    if(name.includes('password') || name.includes('secret') || name.includes('token')) {
-      return <KeyRound className="h-3 w-3 text-red-500" />
-    }
-    return <Database className="h-3 w-3 text-muted-foreground" />
-  }
+
+
 
   return (
     <div className="h-64 border-t border-border bg-card/50 backdrop-blur-sm flex flex-col">
@@ -104,7 +136,8 @@ export function QueryResults({ queryResults, isExecuting, onExecuteQuery, canExe
       {/* Content */}
       <div className="flex-1 overflow-hidden">
         {queryResults ? (
-          <div className="h-full flex flex-col">
+          queryResults.rows.length > 0 ? (
+            <div className="h-full flex flex-col">
             {/* Table Container */}
             <div className="flex-1 relative bg-card/30 backdrop-blur-sm border border-border/20 rounded-lg mx-2 mb-2">
               <div className="absolute inset-0 overflow-auto">
@@ -155,6 +188,12 @@ export function QueryResults({ queryResults, isExecuting, onExecuteQuery, canExe
               </div>
             </div>
           </div>
+          ) : (
+            // todo make it display column names
+            <div className="flex items-center justify-center h-full text-muted-foreground">
+              <p className="text-sm">No results found</p>
+            </div>
+          )
         ) : (
           <div className="flex flex-col items-center justify-center h-full text-muted-foreground">
             <div className="p-3 rounded-full bg-primary/10 mb-3">
