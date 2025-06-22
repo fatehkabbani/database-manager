@@ -268,7 +268,7 @@ class Database
     }
     public function parseSQLQuery(string $query): array
     {
-        $query = trim(preg_replace('/\s+/', ' ', $query)); 
+        $query = trim(preg_replace('/\s+/', ' ', $query));
         $type  = strtoupper(strtok($query, " "));
 
         $result = [

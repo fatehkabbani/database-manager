@@ -6,9 +6,6 @@ import { JsonDialog } from "@/components/jsonDialog"
 import { useState } from "react"
 import { useShortcutToast } from "@/components/shortcut-toast"
 
-// import { useShortcutToast } from "@/components/shortcut-toast"
-// const { showToast} = useShortcutToast()
-// side quest format if type is json (ig its about 80% done)
 interface QueryResultsProps {
   queryResults: QueryResult | null
   isExecuting: boolean

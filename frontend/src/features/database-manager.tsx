@@ -171,56 +171,11 @@ function DatabaseManager() {
       rowsAffected: response.data.rowsAffected || 0,
       success: response.success || false,
     }
-    // const mockResult: QueryResult = {
-    //   columns: ["id", "name", "email", "created_at", "is_active", "department_id"],
-    //   rows: [
-    //     {
-    //       id: 1,
-    //       name: "John Doe",
-    //       email: "john.doe@company.comjohn.doe@company.comjohn.doe@company.comjohn.doe@company.comjohn.doe@company.comjohn.doe@company.comjohn.doe@company.comjohn.doe@company.comjohn.doe@company.comjohn.doe@company.comjohn.doe@company.com",
-    //       created_at: "2024-01-15 10:30:00",
-    //       is_active: true,
-    //       department_id: 101,
-    //     },
-    //     {
-    //       id: 2,
-    //       name: "Jane Smith",
-    //       email: "jane.smith@company.com",
-    //       created_at: "2024-01-16 14:22:00",
-    //       is_active: true,
-    //       department_id: 102,
-    //     },
-    //     {
-    //       id: 3,
-    //       name: "Bob Johnson",
-    //       email: "bob.johnson@company.com",
-    //       created_at: "2024-01-17 09:15:00",
-    //       is_active: false,
-    //       department_id: 101,
-    //     },
-    //     {
-    //       id: 4,
-    //       name: "Alice Brown",
-    //       email: "alice.brown@company.com",
-    //       created_at: "2024-01-18 16:45:00",
-    //       is_active: true,
-    //       department_id: 103,
-    //     },
-    //     {
-    //       id: 5,
-    //       name: "Charlie Wilson",
-    //       email: null,
-    //       created_at: "2024-01-19 11:30:00",
-    //       is_active: true,
-    //       department_id: 102,
-    //     },
-    //   ],
-    //   rowsAffected: 5,
-    //   executionTime: 0.023,
-    //   success: true,
-    // }
+ 
     setQueryResults(mockResult)
-    setIsExecuting(false)
+    setTimeout(() => {
+      setIsExecuting(false)
+    }, 500);
   }
 
   const toggleDatabase = (dbName: string) => {
