@@ -1,11 +1,11 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { CheckCircle, Info, AlertCircle } from "lucide-react"
+import { CheckCircle, Info, AlertCircle, TriangleAlert } from "lucide-react"
 
 interface ToastProps {
   message: string
-  type: "success" | "info" | "warning"
+  type: "success" | "info" | "warning" | 'error'
   duration?: number
 }
 
@@ -30,6 +30,8 @@ export function ShortcutToast({ message, type, duration = 2000 }: ToastProps) {
         return <Info className="h-4 w-4 text-blue-500" />
       case "warning":
         return <AlertCircle className="h-4 w-4 text-yellow-500" />
+      case 'error':
+        return <TriangleAlert className="text-red-500" />
     }
   }
 
