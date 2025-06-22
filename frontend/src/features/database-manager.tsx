@@ -60,8 +60,8 @@ function DatabaseManager() {
         port: conn.port || 3306,
         username: conn.username || "root",
         status: conn.status || "disconnected",
-      }))
 
+      }))
       setConnections(processedConnections)
       if (connectionsData.activeConnection) {
         setActiveConnection(connectionsData.activeConnection)
@@ -204,7 +204,10 @@ function DatabaseManager() {
     onSetQueryResults: setQueryResults
   })
 
-  const activeConnectionData = connections.find((c) => c.id === activeConnection)
+  const activeConnectionData = connections.find((c) => {
+    console.log(c.id, activeConnection);
+  })
+  console.log(connections);
   return (
     <div className="h-screen  text-forground flex flex-col background-primary" >
       <Navbar />
@@ -279,7 +282,7 @@ function DatabaseManager() {
 
                 <PanelResizeHandle className="h-1 bg-border hover:bg-border-hover cursor-row-resize" />
 
-                <Panel defaultSize={30} minSize={20} maxSize={40} className="flex flex-col">
+                <Panel defaultSize={30} minSize={25} maxSize={40} className="flex flex-col">
                   <QueryResults
                     queryResults={queryResults}
                     isExecuting={isExecuting}

@@ -203,11 +203,11 @@ class Database
     public function checkDatabase(string $dbname): bool
     {
         $stmt = $this->pdo->prepare(' SELECT
-  IF(EXISTS (
-    SELECT SCHEMA_NAME
-    FROM INFORMATION_SCHEMA.SCHEMATA
-    WHERE SCHEMA_NAME = "' . $dbname . '"
-  ), "true", "false") AS db_exists');
+         IF(EXISTS (
+           SELECT SCHEMA_NAME
+           FROM INFORMATION_SCHEMA.SCHEMATA
+           WHERE SCHEMA_NAME = "' . $dbname . '"
+         ), "true", "false") AS db_exists');
         $stmt->execute();
         $response = $stmt->fetch();
 
@@ -239,6 +239,7 @@ class Database
     public function isConnected(): bool
     {
         try {
+            
             return $this->pdo && $this->pdo->query('SELECT 1') !== false;
         } catch (PDOException $e) {
             return false;
@@ -254,7 +255,7 @@ class Database
             'port'             => $this->port,
             'username'         => $this->username,
             'current_database' => $this->currentDatabase,
-            'is_connected'     => $this->isConnected(),
+            'status'           => $this->isConnected() ? 'connected' : 'disconnected',
         ];
     }
 
