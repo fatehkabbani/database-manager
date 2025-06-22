@@ -16,6 +16,9 @@ import { useKeyboardShortcuts } from '@/hooks/useKeyboardShortcuts'
 import { SidebarToggle } from "@/components/SidebarToggle"
 import { SidebarActions } from "@/components/SidebarActions"
 import { fetchApi } from "@/utils/fetchApi"
+import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels';
+
+
 function DatabaseManager() {
   // State management
   const [connections, setConnections] = useState<Connection[]>([])
@@ -23,7 +26,6 @@ function DatabaseManager() {
   const [databases, setDatabases] = useState<DatabaseItem[]>([])
   const [selectedDatabase, setSelectedDatabase] = useState<string>("")
   const [expandedDatabases, setExpandedDatabases] = useState<Set<string>>(new Set([""]))
-  const [isConnectionDialogOpen, setIsConnectionDialogOpen] = useState(false)
   const [selected, setSelected] = useState("Database")
 
   // Code editor state
@@ -171,7 +173,7 @@ function DatabaseManager() {
       rowsAffected: response.data.rowsAffected || 0,
       success: response.success || false,
     }
- 
+
     setQueryResults(mockResult)
     setTimeout(() => {
       setIsExecuting(false)
@@ -206,91 +208,104 @@ function DatabaseManager() {
   return (
     <div className="h-screen  text-forground flex flex-col background-primary" >
       <Navbar />
-      <div className="h-screen flex  text-foreground overflow-hidden background-primary" >
-        <ActionBar />
 
-        {/* Left Sidebar */}
-        <div className="w-72 bg-card border-r border-border flex flex-col">
-          {/* Toggle between Database and Query views */}
-          <SidebarToggle selected={selected} onSelectionChange={setSelected} />
+      <div className="h-screen flex text-foreground overflow-hidden background-primary" >
+        <PanelGroup direction="horizontal" >
 
-          {/* Content based on selected view */}
-          {selected === "Database" ? (
-            <DatabaseSidebar
-              databases={databases}
-              selectedDatabase={selectedDatabase}
-              expandedDatabases={expandedDatabases}
-              onDatabaseSelect={setSelectedDatabase}
-              onToggleDatabase={toggleDatabase}
-              onTableSelect={handleTableSelect}
-            />
-          ) : (
-            <QuerySidebar />
-          )}
+          <Panel defaultSize={20} minSize={15} maxSize={30}
+            className="flex flex-row bg-background border-r border-border" >
+            {/* Left Sidebar */}
+            <ActionBar />
+            <div className="w-72 bg-card border-r border-border flex flex-col flex-1 min-h-0">
+              {/* Toggle between Database and Query views */}
+              <SidebarToggle selected={selected} onSelectionChange={setSelected} />
 
-          {/* Connection Selector */}
-          <ConnectionSelector
-            connections={connections}
-            activeConnection={activeConnection}
-            onConnectionChange={setActiveConnection}
-          />
+              {/* Content based on selected view */}
+              {selected === "Database" ? (
+                <DatabaseSidebar
+                  databases={databases}
+                  selectedDatabase={selectedDatabase}
+                  expandedDatabases={expandedDatabases}
+                  onDatabaseSelect={setSelectedDatabase}
+                  onToggleDatabase={toggleDatabase}
+                  onTableSelect={handleTableSelect}
+                />
+              ) : (
+                <QuerySidebar />
+              )}
 
-          {/* Bottom Section */}
-          <SidebarActions
-            savedQueriesOpen={savedQueriesOpen}
-            queryHistoryOpen={queryHistoryOpen}
-            onToggleSavedQueries={() => setSavedQueriesOpen(!savedQueriesOpen)}
-            onToggleQueryHistory={() => setQueryHistoryOpen(!queryHistoryOpen)}
-          />
-        </div>
+              {/* Connection Selector */}
+              <ConnectionSelector
+                connections={connections}
+                activeConnection={activeConnection}
+                onConnectionChange={setActiveConnection}
+              />
 
-        {/* Main Content */}
-        <div className="flex-1 flex flex-col">
-          {/* Query Tabs */}
-          <QueryTabs
-            queryFiles={queryFiles}
-            activeQueryFile={activeQueryFile}
-            onTabChange={setActiveQueryFile}
-            onTabClose={closeQueryFile}
-            onNewQuery={createNewQuery}
-          />
+              {/* Bottom Section */}
+              <SidebarActions
+                savedQueriesOpen={savedQueriesOpen}
+                queryHistoryOpen={queryHistoryOpen}
+                onToggleSavedQueries={() => setSavedQueriesOpen(!savedQueriesOpen)}
+                onToggleQueryHistory={() => setQueryHistoryOpen(!queryHistoryOpen)}
+              />
+            </div>
+          </Panel>
+          <PanelResizeHandle className="w-1 bg-border hover:bg-border-hover" />
 
-          {/* Query Editor */}
-          <div className="flex-1 flex flex-col">
-            <div className="flex-1 flex">
-              <div className="flex-1 relative">
-                <div className="absolute inset-0 flex">
-                  <div className="flex-1">
+          <Panel
+            defaultSize={100}
+            className="flex-1 flex flex-col">
+            {/* Main Content */}
+            <div className="flex-1 flex flex-col">
+              {/* Query Tabs */}
+              <QueryTabs
+                queryFiles={queryFiles}
+                activeQueryFile={activeQueryFile}
+                onTabChange={setActiveQueryFile}
+                onTabClose={closeQueryFile}
+                onNewQuery={createNewQuery}
+              />
+
+              {/* Query Editor */}
+              <PanelGroup direction="vertical">
+                <Panel defaultSize={70} className="relative flex-1">
+                  <div className="absolute inset-0 h-full">
                     <TextEditor
                       value={editorCode}
                       onChange={handleEditorChange}
                     />
                   </div>
-                </div>
-              </div>
+                </Panel>
+
+                <PanelResizeHandle className="h-1 bg-border hover:bg-border-hover cursor-row-resize" />
+
+                <Panel defaultSize={30} minSize={20} maxSize={40} className="flex flex-col">
+                  <QueryResults
+                    queryResults={queryResults}
+                    isExecuting={isExecuting}
+                    onExecuteQuery={executeQuery}
+                    canExecute={!!editorCode.trim()}
+                  />
+                </Panel>
+              </PanelGroup>
+
+              {/* Status Bar */}
+              <StatusBar
+                connectionStatus={activeConnectionData?.status || "disconnected"}
+                connectionName={activeConnectionData?.name || "No connection"}
+                selectedDatabase={selectedDatabase}
+                activeQuery={activeQuery?.name || "No query"}
+                queryCount={queryFiles.length}
+                isExecuting={isExecuting}
+              />
+
             </div>
+          </Panel>
 
-            {/* Results Panel */}
-            <QueryResults
-              queryResults={queryResults}
-              isExecuting={isExecuting}
-              onExecuteQuery={executeQuery}
-              canExecute={!!editorCode.trim()}
-            />
-          </div>
-
-          {/* Status Bar */}
-          <StatusBar
-            connectionStatus={activeConnectionData?.status || "disconnected"}
-            connectionName={activeConnectionData?.name || "No connection"}
-            selectedDatabase={selectedDatabase}
-            activeQuery={activeQuery?.name || "No query"}
-            queryCount={queryFiles.length}
-            isExecuting={isExecuting}
-          />
-        </div>
-        {ToastComponent}
+          {ToastComponent}
+        </PanelGroup>
       </div>
+
     </div>
   )
 }

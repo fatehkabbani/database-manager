@@ -85,7 +85,7 @@ export function QueryResults({ queryResults, isExecuting, onExecuteQuery, canExe
 
   let [selectedRow, setSelectedRow] = useState<number | null>(null)
   return (
-    <div className="h-64 border-t border-border bg-card/50 backdrop-blur-sm flex flex-col">
+    <div className="h-full border-t border-border bg-card/50 backdrop-blur-sm flex flex-col">
       {/* Header */}
       <div className="h-12 border-b border-border flex items-center justify-between px-4 bg-card/80 backdrop-blur-sm">
         <div className="flex items-center gap-3">

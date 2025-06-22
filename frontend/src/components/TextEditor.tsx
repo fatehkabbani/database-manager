@@ -1,5 +1,5 @@
-import React from 'react'
 import Editor from '@monaco-editor/react'
+import { useRef, useState, useEffect, useCallback } from "react"
 
 interface TextEditorProps {
   value: string;
@@ -7,15 +7,39 @@ interface TextEditorProps {
 }
 
 export function TextEditor({ value, onChange }: TextEditorProps) {
+  const containerRef = useRef<HTMLDivElement>(null)
+  const [editorHeight, setEditorHeight] = useState(300) 
+
+  const handleResize = useCallback(() => {
+    if (containerRef.current) {
+      const height = containerRef.current.offsetHeight
+      setEditorHeight(height)
+    }
+  }, [])
+
+  useEffect(() => {
+    const observer = new ResizeObserver(() => {
+      handleResize()
+    })
+
+    if (containerRef.current) {
+      observer.observe(containerRef.current)
+      handleResize() 
+    }
+
+    return () => {
+      observer.disconnect()
+    }
+  }, [handleResize])
   const handleEditorChange = (newValue: string | undefined) => {
     onChange(newValue || '');
   }
 
   return (
     <div className="mb-2 h-full rounded-lg overflow-hidden border border-border/50 bg-card/50 backdrop-blur-sm">
-      <div className="mt-1">
+      <div  ref={containerRef} className="w-full h-full mt-1">
         <Editor
-          height='calc(100vh - 300px)'
+          height={editorHeight}
           defaultLanguage="sql"
           value={value}
           onChange={handleEditorChange}
