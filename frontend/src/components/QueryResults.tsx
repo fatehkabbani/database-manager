@@ -101,7 +101,7 @@ export function QueryResults({ queryResults, isExecuting, onExecuteQuery, canExe
                 {queryResults.rowsAffected} rows
               </span>
               <span className="text-xs bg-secondary/20 text-secondary px-2 py-1 rounded-full font-medium border border-secondary/30">
-                {queryResults.executionTime}ms
+                {queryResults.executionTime}
               </span>
             </div>
           )}

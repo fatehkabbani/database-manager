@@ -56,9 +56,9 @@ function DatabaseManager() {
       const processedConnections = Object.entries(connectionsData.connections).map(([id, conn]: [string, any]) => ({
         id,
         name: conn.name || "Unnamed Connection",
-        host: conn.host || "localhost",
-        port: conn.port || 3306,
-        username: conn.username || "root",
+        host: conn.host || "unkown",
+        port: conn.port || 0,
+        username: conn.username || 'unknown',
         status: conn.status || "disconnected",
 
       }))
