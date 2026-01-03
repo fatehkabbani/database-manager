@@ -10,7 +10,7 @@ Database Manager is a full-stack web application I developed to address the usab
 
 I built this project using a modern technology stack:
 - **Frontend:** React 19 with TypeScript, leveraging Vite for build tooling and TailwindCSS for responsive design
-- **Backend:** PHP 8+ REST API with PDO for database operations and AltoRouter for routing
+- **Backend:** PHP 8.0+ REST API with PDO for database operations and AltoRouter for routing
 - **Editor:** Integrated Monaco Editor (the same editor powering VS Code) for professional-grade SQL editing with syntax highlighting
 - **Security:** Implemented encrypted password storage and prepared statements for SQL injection prevention
 

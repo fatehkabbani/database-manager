@@ -8,7 +8,7 @@ Database Manager is a full-stack application that addresses the usability and fe
 
 **Technology Stack:**
 - **Frontend:** React 19, TypeScript, Vite, TailwindCSS, Monaco Editor
-- **Backend:** PHP 8+, PDO, AltoRouter
+- **Backend:** PHP 8.0+, PDO, AltoRouter
 - **Database:** MySQL/MariaDB (with architecture for multi-database support)
 - **UI Components:** Radix UI, Lucide Icons, shadcn/ui components
 
