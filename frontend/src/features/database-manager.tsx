@@ -209,7 +209,7 @@ function DatabaseManager() {
   })
   console.log(connections);
   return (
-    <div className="h-screen  text-forground flex flex-col background-primary" >
+    <div className="app-theme h-screen text-foreground flex flex-col background-primary" >
       <Navbar />
 
       <div className="h-screen flex text-foreground overflow-hidden background-primary" >

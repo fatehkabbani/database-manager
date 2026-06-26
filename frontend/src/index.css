@@ -115,6 +115,66 @@
   --sidebar-ring: #4a9eff;
 }
 
+/*
+ * Devloop-style theme — scoped to the /app page only (see database-manager.tsx).
+ * Neutral monochrome dark palette + Sora typography. The landing page keeps the
+ * global :root theme above and is intentionally left untouched.
+ */
+.app-theme {
+  --radius: 0.625rem;
+  --background: #0a0a0a;
+  --foreground: #fafafa;
+  --card: #171717;
+  --card-foreground: #fafafa;
+  --popover: #171717;
+  --popover-foreground: #fafafa;
+  --text: #fafafa;
+  /* Blue is devloop's interactive accent; surfaces stay neutral. */
+  --primary: #1447e6;
+  --primary-foreground: #fafafa;
+  --secondary: #262626;
+  --secondary-foreground: #fafafa;
+  --muted: #262626;
+  --muted-foreground: #c4c4c4;
+  --accent: #262626;
+  --accent-foreground: #fafafa;
+  --destructive: #ff6568;
+  --success: #62cd5e;
+  --success-foreground: #62cd5e;
+  --border: rgba(255, 255, 255, 0.1);
+  --input: rgba(255, 255, 255, 0.15);
+  --ring: #3080ff;
+  --chart-1: #90c5ff;
+  --chart-2: #3080ff;
+  --chart-3: #155dfc;
+  --chart-4: #1447e6;
+  --chart-5: #193cb8;
+  --sidebar: #171717;
+  --sidebar-foreground: #fafafa;
+  --sidebar-primary: #1447e6;
+  --sidebar-primary-foreground: #fafafa;
+  --sidebar-accent: #262626;
+  --sidebar-accent-foreground: #fafafa;
+  --sidebar-border: rgba(255, 255, 255, 0.1);
+  --sidebar-ring: #3080ff;
+
+  font-family: "Sora", system-ui, -apple-system, "Segoe UI", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  letter-spacing: -0.01em;
+  scrollbar-color: var(--primary) #171717;
+}
+
+/* Keep scrollbars neutral inside the app instead of the global neon styling. */
+.app-theme *::-webkit-scrollbar-track,
+.app-theme::-webkit-scrollbar-track {
+  background: #171717;
+}
+
+.app-theme *::-webkit-scrollbar-thumb,
+.app-theme::-webkit-scrollbar-thumb {
+  background: var(--primary);
+}
+
 @theme inline {
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
